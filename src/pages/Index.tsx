@@ -1,13 +1,24 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Hero } from "@/components/landing/Hero";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { Footer } from "@/components/landing/Footer";
+import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      <Helmet>
+        <title>KlinUp - Report Waste, Earn Rewards, Save the Planet</title>
+        <meta
+          name="description"
+          content="KlinUp empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items. Join the movement for a cleaner environment."
+        />
+      </Helmet>
+      <main className="min-h-screen bg-background">
+        <Hero />
+        <HowItWorks />
+        <Footer />
+      </main>
+    </>
   );
 };
 
