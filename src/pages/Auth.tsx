@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, Building2, Heart, Factory, ArrowLeft, Loader2 } from "lucide-react";
-import { loginSchema, signupSchema } from "@/lib/validations";
 import type { UserRole } from "@/types";
 
 const Auth = () => {
@@ -18,7 +17,6 @@ const Auth = () => {
   const [isSignup, setIsSignup] = useState(searchParams.get("mode") === "signup");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Form state
   const [email, setEmail] = useState("");
@@ -53,30 +51,14 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const clearErrors = () => setErrors({});
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    clearErrors();
-
-    const result = loginSchema.safeParse({ email, password });
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
     setIsLoading(true);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: result.data.email,
-        password: result.data.password,
+        email,
+        password,
       });
 
       if (error) throw error;
@@ -90,35 +72,14 @@ const Auth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    clearErrors();
-
-    if (!selectedRole) {
-      toast.error("Please select a role");
+    
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
 
-    const result = signupSchema.safeParse({
-      email,
-      password,
-      confirmPassword,
-      fullName,
-      phone,
-      companyName: companyName || undefined,
-      organizationName: organizationName || undefined,
-      businessName: businessName || undefined,
-      address: address || undefined,
-      materialType: materialType || undefined,
-    });
-
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      toast.error(result.error.errors[0]?.message || "Please fix the form errors");
+    if (!selectedRole) {
+      toast.error("Please select a role");
       return;
     }
 
@@ -126,9 +87,9 @@ const Auth = () => {
 
     try {
       const metadata: Record<string, string> = {
-        full_name: result.data.fullName,
-        phone: result.data.phone,
-        role: selectedRole, // Note: Trigger sets all signups to 'user' role - admin approval needed for elevated roles
+        full_name: fullName,
+        phone,
+        role: selectedRole,
       };
 
       if (selectedRole === "wmc") {
@@ -145,8 +106,8 @@ const Auth = () => {
       }
 
       const { error } = await supabase.auth.signUp({
-        email: result.data.email,
-        password: result.data.password,
+        email,
+        password,
         options: {
           emailRedirectTo: `${window.location.origin}/dashboard`,
           data: metadata,
@@ -154,13 +115,7 @@ const Auth = () => {
       });
 
       if (error) throw error;
-      
-      // Inform user about role approval process
-      if (selectedRole !== "user") {
-        toast.success("Account created! Note: Your role will start as 'Citizen' until approved by an admin.");
-      } else {
-        toast.success("Account created! Please check your email to verify.");
-      }
+      toast.success("Account created! Please check your email to verify.");
     } catch (error: any) {
       if (error.message?.includes("already registered")) {
         toast.error("This email is already registered. Please sign in.");
@@ -170,13 +125,6 @@ const Auth = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const renderError = (field: string) => {
-    if (errors[field]) {
-      return <p className="text-sm text-destructive mt-1">{errors[field]}</p>;
-    }
-    return null;
   };
 
   const roles = [
@@ -236,9 +184,6 @@ const Auth = () => {
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground text-center mt-4">
-                  Note: WMC, NGO, and Recycler roles require admin approval after signup.
-                </p>
                 <div className="pt-4 text-center">
                   <button
                     onClick={() => setIsSignup(false)}
@@ -271,9 +216,7 @@ const Auth = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className={errors.email ? "border-destructive" : ""}
                   />
-                  {renderError("email")}
                 </div>
 
                 <div className="space-y-2">
@@ -286,9 +229,7 @@ const Auth = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className={errors.password ? "border-destructive" : ""}
                   />
-                  {renderError("password")}
                 </div>
 
                 {isSignup && (
@@ -302,9 +243,7 @@ const Auth = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
-                        className={errors.confirmPassword ? "border-destructive" : ""}
                       />
-                      {renderError("confirmPassword")}
                     </div>
 
                     <div className="space-y-2">
@@ -315,9 +254,7 @@ const Auth = () => {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required
-                        className={errors.fullName ? "border-destructive" : ""}
                       />
-                      {renderError("fullName")}
                     </div>
 
                     <div className="space-y-2">
@@ -325,13 +262,11 @@ const Auth = () => {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder="+234xxxxxxxxxx"
+                        placeholder="+234 xxx xxx xxxx"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         required
-                        className={errors.phone ? "border-destructive" : ""}
                       />
-                      {renderError("phone")}
                     </div>
 
                     {/* Role-specific fields */}
@@ -447,7 +382,6 @@ const Auth = () => {
                     onClick={() => {
                       setIsSignup(!isSignup);
                       setSelectedRole(null);
-                      clearErrors();
                     }}
                     className="text-sm text-muted-foreground hover:text-foreground"
                   >
