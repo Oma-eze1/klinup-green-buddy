@@ -6,6 +6,8 @@ import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useUserRole } from "@/hooks/useUserRole";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import {
   Camera,
   Coins,
@@ -28,8 +30,11 @@ const Dashboard = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const userRole = (user?.user_metadata?.role as UserRole) || "user";
-  const userName = user?.user_metadata?.full_name || "User";
+  // Fetch role from database instead of user_metadata (security fix)
+  const { role: userRole, loading: roleLoading } = useUserRole(user?.id);
+  const { profile, loading: profileLoading } = useUserProfile(user?.id);
+
+  const userName = profile?.full_name || user?.user_metadata?.full_name || "User";
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -59,7 +64,7 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  if (loading) {
+  if (loading || roleLoading || profileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
