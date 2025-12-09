@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import ReportWaste from "./pages/ReportWaste";
 import CashOut from "./pages/CashOut";
 import GiftOut from "./pages/GiftOut";
+import NewsLearnPage from "./pages/NewsLearnPage";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/report-waste" element={<ReportWaste />} />
             <Route path="/cash-out" element={<CashOut />} />
             <Route path="/gift-out" element={<GiftOut />} />
+            <Route path="/news-learn" element={<NewsLearnPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

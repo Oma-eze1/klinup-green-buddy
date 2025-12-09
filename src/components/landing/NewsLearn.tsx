@@ -1,8 +1,9 @@
-import { Newspaper, BookOpen, Lightbulb, ArrowRight, X } from "lucide-react";
+import { Newspaper, BookOpen, Lightbulb, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface ArticleCardProps {
   icon: React.ReactNode;
@@ -104,9 +105,11 @@ export const NewsLearn = () => {
           </div>
 
           <div className="text-center">
-            <Button variant="outline" size="lg">
-              View All Articles
-              <ArrowRight className="w-4 h-4 ml-2" />
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/news-learn">
+                View All Articles
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
             </Button>
           </div>
         </div>
