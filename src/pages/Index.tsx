@@ -1,5 +1,6 @@
 import { Hero } from "@/components/landing/Hero";
 import { HowItWorks } from "@/components/landing/HowItWorks";
+import { NewsLearn } from "@/components/landing/NewsLearn";
 import { Footer } from "@/components/landing/Footer";
 import { Helmet } from "react-helmet-async";
 
@@ -16,6 +17,7 @@ const Index = () => {
       <main className="min-h-screen bg-background">
         <Hero />
         <HowItWorks />
+        <NewsLearn />
         <Footer />
       </main>
     </>
