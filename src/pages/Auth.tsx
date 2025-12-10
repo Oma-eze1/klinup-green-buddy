@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, Building2, Heart, Factory, ArrowLeft, Loader2 } from "lucide-react";
+import { Users, Building2, Heart, Factory, ArrowLeft, Loader2, Upload, X } from "lucide-react";
 import type { UserRole } from "@/types";
 
 const Auth = () => {
@@ -31,6 +31,26 @@ const Auth = () => {
   const [businessName, setBusinessName] = useState("");
   const [address, setAddress] = useState("");
   const [materialType, setMaterialType] = useState("");
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [certificateFile, setCertificateFile] = useState<File | null>(null);
+  const [certificatePreview, setCertificatePreview] = useState<string | null>(null);
+
+  const handleCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size must be less than 5MB");
+        return;
+      }
+      setCertificateFile(file);
+      setCertificatePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeCertificate = () => {
+    setCertificateFile(null);
+    setCertificatePreview(null);
+  };
 
   useEffect(() => {
     // Check if user is already logged in
@@ -95,17 +115,21 @@ const Auth = () => {
       if (selectedRole === "wmc") {
         metadata.company_name = companyName;
         metadata.address = address;
+        metadata.registration_number = registrationNumber;
       } else if (selectedRole === "ngo") {
         metadata.organization_name = organizationName;
+        metadata.registration_number = registrationNumber;
       } else if (selectedRole === "recycler") {
         metadata.business_name = businessName;
         metadata.material_type = materialType;
         metadata.address = address;
+        metadata.registration_number = registrationNumber;
       } else if (selectedRole === "user") {
         metadata.address = address;
       }
 
-      const { error } = await supabase.auth.signUp({
+      // Sign up the user first
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -115,6 +139,32 @@ const Auth = () => {
       });
 
       if (error) throw error;
+
+      // Upload certificate if provided and user was created
+      if (certificateFile && signUpData.user) {
+        const fileExt = certificateFile.name.split('.').pop();
+        const filePath = `${signUpData.user.id}/${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('certificates')
+          .upload(filePath, certificateFile);
+
+        if (uploadError) {
+          console.error("Certificate upload error:", uploadError);
+          toast.warning("Account created but certificate upload failed. You can upload it later.");
+        } else {
+          // Update profile with certificate URL
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ certificate_url: filePath })
+            .eq('user_id', signUpData.user.id);
+
+          if (updateError) {
+            console.error("Profile update error:", updateError);
+          }
+        }
+      }
+
       toast.success("Account created! Please check your email to verify.");
     } catch (error: any) {
       if (error.message?.includes("already registered")) {
@@ -283,6 +333,51 @@ const Auth = () => {
                           />
                         </div>
                         <div className="space-y-2">
+                          <Label htmlFor="registrationNumber">Business Registration Number</Label>
+                          <Input
+                            id="registrationNumber"
+                            placeholder="RC-XXXXXXXX"
+                            value={registrationNumber}
+                            onChange={(e) => setRegistrationNumber(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="certificate">Certificate Picture</Label>
+                          {certificatePreview ? (
+                            <div className="relative">
+                              <img
+                                src={certificatePreview}
+                                alt="Certificate preview"
+                                className="w-full h-32 object-cover rounded-lg border border-border"
+                              />
+                              <button
+                                type="button"
+                                onClick={removeCertificate}
+                                className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <label
+                              htmlFor="certificateUpload"
+                              className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-secondary/50 transition-colors"
+                            >
+                              <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                              <span className="text-sm text-muted-foreground">Click to upload certificate</span>
+                              <span className="text-xs text-muted-foreground">(Max 5MB, JPG/PNG/PDF)</span>
+                              <input
+                                id="certificateUpload"
+                                type="file"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={handleCertificateChange}
+                              />
+                            </label>
+                          )}
+                        </div>
+                        <div className="space-y-2">
                           <Label htmlFor="address">Office Address</Label>
                           <Input
                             id="address"
@@ -296,16 +391,63 @@ const Auth = () => {
                     )}
 
                     {selectedRole === "ngo" && (
-                      <div className="space-y-2">
-                        <Label htmlFor="organizationName">Organization Name</Label>
-                        <Input
-                          id="organizationName"
-                          placeholder="Your NGO name"
-                          value={organizationName}
-                          onChange={(e) => setOrganizationName(e.target.value)}
-                          required
-                        />
-                      </div>
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="organizationName">Organization Name</Label>
+                          <Input
+                            id="organizationName"
+                            placeholder="Your NGO name"
+                            value={organizationName}
+                            onChange={(e) => setOrganizationName(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="registrationNumber">Business Registration Number</Label>
+                          <Input
+                            id="registrationNumber"
+                            placeholder="RC-XXXXXXXX"
+                            value={registrationNumber}
+                            onChange={(e) => setRegistrationNumber(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="certificate">Certificate Picture</Label>
+                          {certificatePreview ? (
+                            <div className="relative">
+                              <img
+                                src={certificatePreview}
+                                alt="Certificate preview"
+                                className="w-full h-32 object-cover rounded-lg border border-border"
+                              />
+                              <button
+                                type="button"
+                                onClick={removeCertificate}
+                                className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <label
+                              htmlFor="certificateUploadNgo"
+                              className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-secondary/50 transition-colors"
+                            >
+                              <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                              <span className="text-sm text-muted-foreground">Click to upload certificate</span>
+                              <span className="text-xs text-muted-foreground">(Max 5MB, JPG/PNG/PDF)</span>
+                              <input
+                                id="certificateUploadNgo"
+                                type="file"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={handleCertificateChange}
+                              />
+                            </label>
+                          )}
+                        </div>
+                      </>
                     )}
 
                     {selectedRole === "recycler" && (
@@ -319,6 +461,51 @@ const Auth = () => {
                             onChange={(e) => setBusinessName(e.target.value)}
                             required
                           />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="registrationNumber">Business Registration Number</Label>
+                          <Input
+                            id="registrationNumber"
+                            placeholder="RC-XXXXXXXX"
+                            value={registrationNumber}
+                            onChange={(e) => setRegistrationNumber(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="certificate">Certificate Picture</Label>
+                          {certificatePreview ? (
+                            <div className="relative">
+                              <img
+                                src={certificatePreview}
+                                alt="Certificate preview"
+                                className="w-full h-32 object-cover rounded-lg border border-border"
+                              />
+                              <button
+                                type="button"
+                                onClick={removeCertificate}
+                                className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <label
+                              htmlFor="certificateUploadRecycler"
+                              className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-secondary/50 transition-colors"
+                            >
+                              <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                              <span className="text-sm text-muted-foreground">Click to upload certificate</span>
+                              <span className="text-xs text-muted-foreground">(Max 5MB, JPG/PNG/PDF)</span>
+                              <input
+                                id="certificateUploadRecycler"
+                                type="file"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={handleCertificateChange}
+                              />
+                            </label>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="materialType">Material Types</Label>
