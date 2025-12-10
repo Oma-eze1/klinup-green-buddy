@@ -1,4 +1,5 @@
 import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
+import { TranslatableText } from "@/components/TranslatableText";
 
 export const Footer = () => {
   return (
@@ -7,17 +8,17 @@ export const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <KlinUpLogo size="sm" />
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} KlinUp. Building cleaner cities together.
+            © {new Date().getFullYear()} KlinUp. <TranslatableText>Building cleaner cities together.</TranslatableText>
           </p>
           <div className="flex items-center gap-6">
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Privacy
+              <TranslatableText>Privacy</TranslatableText>
             </a>
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Terms
+              <TranslatableText>Terms</TranslatableText>
             </a>
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Contact
+              <TranslatableText>Contact</TranslatableText>
             </a>
           </div>
         </div>

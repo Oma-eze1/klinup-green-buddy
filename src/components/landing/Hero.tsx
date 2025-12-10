@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
 import { ArrowRight, Recycle, Camera, Gift, Coins } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { TranslatableText } from "@/components/TranslatableText";
 
 export const Hero = () => {
   const navigate = useNavigate();
@@ -18,11 +20,12 @@ export const Hero = () => {
       <header className="container py-6 flex items-center justify-between">
         <KlinUpLogo />
         <div className="flex items-center gap-3">
+          <LanguageSwitcher />
           <Button variant="ghost" onClick={() => navigate("/auth")}>
-            Sign In
+            <TranslatableText>Sign In</TranslatableText>
           </Button>
           <Button variant="hero" onClick={() => navigate("/auth?mode=signup")}>
-            Get Started
+            <TranslatableText>Get Started</TranslatableText>
           </Button>
         </div>
       </header>
@@ -34,27 +37,29 @@ export const Hero = () => {
           <div className="animate-slide-up">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium mb-6">
               <Recycle className="w-4 h-4 text-primary" />
-              Making cities cleaner, together
+              <TranslatableText>Making cities cleaner, together</TranslatableText>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              Report Waste.{" "}
-              <span className="text-primary">Earn Rewards.</span>{" "}
-              Save the Planet.
+              <TranslatableText>Report Waste.</TranslatableText>{" "}
+              <span className="text-primary"><TranslatableText>Earn Rewards.</TranslatableText></span>{" "}
+              <TranslatableText>Save the Planet.</TranslatableText>
             </h1>
             
             <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-              KlinUp empowers citizens to report waste incidents, sell recyclables for cash, 
-              and donate reusable items to those in need. Join the movement for a cleaner environment.
+              <TranslatableText>
+                KlinUp empowers citizens to report waste incidents, sell recyclables for cash, 
+                and donate reusable items to those in need. Join the movement for a cleaner environment.
+              </TranslatableText>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="xl" variant="hero" onClick={() => navigate("/auth?mode=signup")}>
-                Join KlinUp Free
+                <TranslatableText>Join KlinUp Free</TranslatableText>
                 <ArrowRight className="w-5 h-5" />
               </Button>
               <Button size="xl" variant="outline" onClick={() => navigate("/auth")}>
-                Sign In
+                <TranslatableText>Sign In</TranslatableText>
               </Button>
             </div>
           </div>
@@ -124,8 +129,12 @@ const FeatureCard = ({ icon, title, description, color, className }: FeatureCard
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-card mb-4 ${iconColors[color]}`}>
         {icon}
       </div>
-      <h3 className="font-semibold text-lg mb-2">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
+      <h3 className="font-semibold text-lg mb-2">
+        <TranslatableText>{title}</TranslatableText>
+      </h3>
+      <p className="text-sm text-muted-foreground">
+        <TranslatableText>{description}</TranslatableText>
+      </p>
     </div>
   );
 };

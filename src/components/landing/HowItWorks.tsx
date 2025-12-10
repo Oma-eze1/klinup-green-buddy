@@ -1,5 +1,6 @@
 import { Users, Building2, Heart, Factory } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { TranslatableText } from "@/components/TranslatableText";
 
 export const HowItWorks = () => {
   return (
@@ -7,11 +8,14 @@ export const HowItWorks = () => {
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            One Platform, <span className="text-primary">Four Roles</span>
+            <TranslatableText>One Platform,</TranslatableText>{" "}
+            <span className="text-primary"><TranslatableText>Four Roles</TranslatableText></span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            KlinUp connects citizens, waste management companies, NGOs, and recyclers 
-            to create a sustainable ecosystem for waste management.
+            <TranslatableText>
+              KlinUp connects citizens, waste management companies, NGOs, and recyclers 
+              to create a sustainable ecosystem for waste management.
+            </TranslatableText>
           </p>
         </div>
 
@@ -69,8 +73,12 @@ const RoleCard = ({ icon, title, description, color }: RoleCardProps) => {
         >
           {icon}
         </div>
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <h3 className="text-xl font-semibold mb-2">
+          <TranslatableText>{title}</TranslatableText>
+        </h3>
+        <p className="text-muted-foreground text-sm">
+          <TranslatableText>{description}</TranslatableText>
+        </p>
       </CardContent>
     </Card>
   );
