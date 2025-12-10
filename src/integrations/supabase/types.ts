@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           address: string | null
           business_name: string | null
+          certificate_url: string | null
           company_name: string | null
           created_at: string
           full_name: string
@@ -25,12 +26,14 @@ export type Database = {
           material_type: string | null
           organization_name: string | null
           phone: string | null
+          registration_number: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           address?: string | null
           business_name?: string | null
+          certificate_url?: string | null
           company_name?: string | null
           created_at?: string
           full_name: string
@@ -38,12 +41,14 @@ export type Database = {
           material_type?: string | null
           organization_name?: string | null
           phone?: string | null
+          registration_number?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           address?: string | null
           business_name?: string | null
+          certificate_url?: string | null
           company_name?: string | null
           created_at?: string
           full_name?: string
@@ -51,6 +56,7 @@ export type Database = {
           material_type?: string | null
           organization_name?: string | null
           phone?: string | null
+          registration_number?: string | null
           updated_at?: string
           user_id?: string
         }
