@@ -1,23 +1,16 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { Language, getTranslation } from '@/data/translations';
 
-export type Language = 'English' | 'Hausa' | 'Igbo' | 'Yoruba';
-
-interface TranslationCache {
-  [key: string]: string;
-}
+export type { Language } from '@/data/translations';
 
 interface LanguageContextType {
   currentLanguage: Language;
   setCurrentLanguage: (lang: Language) => void;
-  translate: (text: string) => Promise<string>;
-  isTranslating: boolean;
-  translationCache: TranslationCache;
+  translate: (text: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const CACHE_KEY = 'klinup_translations';
 const LANGUAGE_KEY = 'klinup_language';
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -25,79 +18,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const saved = localStorage.getItem(LANGUAGE_KEY);
     return (saved as Language) || 'English';
   });
-  
-  const [translationCache, setTranslationCache] = useState<TranslationCache>(() => {
-    try {
-      const saved = localStorage.getItem(CACHE_KEY);
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
-  
-  const [isTranslating, setIsTranslating] = useState(false);
 
   // Persist language preference
   useEffect(() => {
     localStorage.setItem(LANGUAGE_KEY, currentLanguage);
   }, [currentLanguage]);
 
-  // Persist cache
-  useEffect(() => {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(translationCache));
-  }, [translationCache]);
-
   const setCurrentLanguage = useCallback((lang: Language) => {
     setCurrentLanguageState(lang);
   }, []);
 
-  const translate = useCallback(async (text: string): Promise<string> => {
+  const translate = useCallback((text: string): string => {
     if (!text?.trim()) return text;
-    if (currentLanguage === 'English') return text;
-
-    const cacheKey = `${currentLanguage}:${text}`;
-    
-    // Check cache first
-    if (translationCache[cacheKey]) {
-      return translationCache[cacheKey];
-    }
-
-    setIsTranslating(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('translate', {
-        body: { text, targetLanguage: currentLanguage }
-      });
-
-      if (error) {
-        console.error('Translation error:', error);
-        return text;
-      }
-
-      const translatedText = data?.translatedText || text;
-      
-      // Update cache
-      setTranslationCache(prev => ({
-        ...prev,
-        [cacheKey]: translatedText
-      }));
-
-      return translatedText;
-    } catch (error) {
-      console.error('Translation failed:', error);
-      return text;
-    } finally {
-      setIsTranslating(false);
-    }
-  }, [currentLanguage, translationCache]);
+    return getTranslation(text, currentLanguage);
+  }, [currentLanguage]);
 
   return (
     <LanguageContext.Provider value={{
       currentLanguage,
       setCurrentLanguage,
-      translate,
-      isTranslating,
-      translationCache
+      translate
     }}>
       {children}
     </LanguageContext.Provider>

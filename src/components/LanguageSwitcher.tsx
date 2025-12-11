@@ -17,7 +17,7 @@ const languages: { code: Language; label: string; flag: string }[] = [
 ];
 
 export const LanguageSwitcher: React.FC = () => {
-  const { currentLanguage, setCurrentLanguage, isTranslating } = useLanguage();
+  const { currentLanguage, setCurrentLanguage } = useLanguage();
 
   const currentLang = languages.find(l => l.code === currentLanguage) || languages[0];
 
@@ -28,7 +28,6 @@ export const LanguageSwitcher: React.FC = () => {
           variant="ghost" 
           size="sm" 
           className="gap-2 text-foreground/80 hover:text-foreground hover:bg-primary/10"
-          disabled={isTranslating}
         >
           <Globe className="h-4 w-4" />
           <span className="hidden sm:inline">{currentLang.flag} {currentLang.label}</span>

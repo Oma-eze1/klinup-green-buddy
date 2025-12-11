@@ -1,6 +1,6 @@
 import { Users, Building2, Heart, Factory } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { TranslatableText } from "@/components/TranslatableText";
+import TranslatableText from "@/components/TranslatableText";
 
 export const HowItWorks = () => {
   return (
