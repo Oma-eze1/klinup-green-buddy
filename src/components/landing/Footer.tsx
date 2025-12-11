@@ -1,5 +1,5 @@
 import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
-import { TranslatableText } from "@/components/TranslatableText";
+import TranslatableText from "@/components/TranslatableText";
 
 export const Footer = () => {
   return (

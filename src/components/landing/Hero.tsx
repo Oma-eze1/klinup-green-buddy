@@ -3,7 +3,7 @@ import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
 import { ArrowRight, Recycle, Camera, Gift, Coins } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { TranslatableText } from "@/components/TranslatableText";
+import TranslatableText from "@/components/TranslatableText";
 
 export const Hero = () => {
   const navigate = useNavigate();
