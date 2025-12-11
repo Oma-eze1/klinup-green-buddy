@@ -29,9 +29,9 @@ serve(async (req) => {
       );
     }
 
-    const HF_TOKEN = Deno.env.get('HUGGING_FACE_ACCESS_TOKEN');
-    if (!HF_TOKEN) {
-      console.error('HUGGING_FACE_ACCESS_TOKEN not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      console.error('LOVABLE_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'Translation service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -40,34 +40,43 @@ serve(async (req) => {
 
     console.log(`Translating to ${targetLanguage}: "${text.substring(0, 50)}..."`);
 
-    const response = await fetch("https://router.huggingface.co/models/NCAIR1/N-ATLaS", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${HF_TOKEN}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        inputs: `Translate the following English text to ${targetLanguage}: ${text}`,
-        parameters: { 
-          max_new_tokens: 500,
-          temperature: 0.3
-        }
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { 
+            role: "system", 
+            content: `You are a translator specializing in Nigerian languages. Translate the given text to ${targetLanguage}. Only respond with the translation, nothing else. Keep the same tone and meaning. If the text contains proper nouns or brand names, keep them as-is.`
+          },
+          { 
+            role: "user", 
+            content: text 
+          }
+        ],
+        temperature: 0.3
       })
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Hugging Face API error:', response.status, errorText);
+      console.error('Lovable AI error:', response.status, errorText);
       
-      // If model is loading, return original text with a flag
-      if (response.status === 503) {
+      if (response.status === 429) {
         return new Response(
-          JSON.stringify({ 
-            translatedText: text, 
-            modelLoading: true,
-            message: 'Model is loading, please try again in a moment'
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Rate limit exceeded, please try again later' }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: 'AI credits exhausted' }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
@@ -78,17 +87,9 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('Translation response:', JSON.stringify(data).substring(0, 200));
-
-    // Extract translated text from response
-    let translatedText = text;
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      translatedText = data[0].generated_text;
-    } else if (data.generated_text) {
-      translatedText = data.generated_text;
-    } else if (typeof data === 'string') {
-      translatedText = data;
-    }
+    const translatedText = data.choices?.[0]?.message?.content?.trim() || text;
+    
+    console.log(`Translation result: "${translatedText.substring(0, 50)}..."`);
 
     return new Response(
       JSON.stringify({ translatedText }),
