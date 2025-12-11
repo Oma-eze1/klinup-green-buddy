@@ -40,7 +40,7 @@ serve(async (req) => {
 
     console.log(`Translating to ${targetLanguage}: "${text.substring(0, 50)}..."`);
 
-    const response = await fetch("https://api-inference.huggingface.co/models/NCAIR1/N-ATLaS", {
+    const response = await fetch("https://router.huggingface.co/models/NCAIR1/N-ATLaS", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${HF_TOKEN}`,
