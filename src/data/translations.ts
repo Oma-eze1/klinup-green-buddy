@@ -196,6 +196,92 @@ export const translations: Record<string, Record<Language, string>> = {
     Hausa: "Tuntuɓa",
     Igbo: "Kpọtụrụ",
     Yoruba: "Kàn sí"
+  },
+
+  // News & Learn Section
+  "Stay Informed": {
+    English: "Stay Informed",
+    Hausa: "Kasance Cikin Sani",
+    Igbo: "Nọrọ N'ịmara",
+    Yoruba: "Má Wà Nínú Ìmọ̀"
+  },
+  "News &": {
+    English: "News &",
+    Hausa: "Labarai &",
+    Igbo: "Akụkọ &",
+    Yoruba: "Ìròyìn &"
+  },
+  "Learn": {
+    English: "Learn",
+    Hausa: "Koyo",
+    Igbo: "Mụta",
+    Yoruba: "Kọ́ Ẹ̀kọ́"
+  },
+  "Stay updated with the latest waste management news, tips, and educational resources to help you make a bigger impact.": {
+    English: "Stay updated with the latest waste management news, tips, and educational resources to help you make a bigger impact.",
+    Hausa: "Kasance da sabuntawa tare da labarai na baya-bayan nan kan sarrafa shara, shawarwari, da albarkatun ilimi don taimaka muku yin tasiri mai girma.",
+    Igbo: "Nọrọ na-eweta ozi ọhụrụ banyere njikwa ahịhịa, ndụmọdụ, na akwụkwọ mmụta iji nyere gị aka ime mmetụta buru ibu.",
+    Yoruba: "Wà pẹlu awọn ìròyìn tuntun nipa iṣakoso idoti, awọn imọran, ati awọn ohun elo ẹkọ lati ran ọ lọwọ lati ni ipa nla."
+  },
+  "News": {
+    English: "News",
+    Hausa: "Labarai",
+    Igbo: "Akụkọ",
+    Yoruba: "Ìròyìn"
+  },
+  "Tips": {
+    English: "Tips",
+    Hausa: "Shawarwari",
+    Igbo: "Ndụmọdụ",
+    Yoruba: "Àwọn Ìmọ̀ràn"
+  },
+  "New Recycling Guidelines for 2025": {
+    English: "New Recycling Guidelines for 2025",
+    Hausa: "Sabbin Jagororin Sake Amfani da Kayayyaki na 2025",
+    Igbo: "Ntuziaka Ọhụrụ Maka Mgbanwe Ihe maka 2025",
+    Yoruba: "Àwọn Ìlànà Àtúnlò Tuntun fún 2025"
+  },
+  "Learn about the latest updates to recycling standards and how they affect your community.": {
+    English: "Learn about the latest updates to recycling standards and how they affect your community.",
+    Hausa: "Koyi game da sabuntawa na baya-bayan nan kan ƙa'idodin sake amfani da kayayyaki da yadda suke shafar al'ummar ku.",
+    Igbo: "Mụta banyere mmelite ọhụrụ na ụkpụrụ mgbanwe ihe na ka ha si emetụta obodo gị.",
+    Yoruba: "Kọ ẹkọ nipa awọn imudojuiwọn tuntun si awọn iṣedede atunlo ati bii wọn ṣe kan agbegbe rẹ."
+  },
+  "Understanding Plastic Types": {
+    English: "Understanding Plastic Types",
+    Hausa: "Fahimtar Nau'ikan Roba",
+    Igbo: "Ịghọta Ụdị Plastik",
+    Yoruba: "Òye Àwọn Irú Pilasitiki"
+  },
+  "A comprehensive guide to different plastic types and which ones can be recycled.": {
+    English: "A comprehensive guide to different plastic types and which ones can be recycled.",
+    Hausa: "Jagora cikakke game da nau'ikan roba daban-daban da waɗanda za a iya sake yin amfani da su.",
+    Igbo: "Ntuziaka zuru ezu banyere ụdị plastik dị iche iche na ndị a nwere ike ịgbanwe.",
+    Yoruba: "Ìtọ́sọ́nà pípé sí àwọn irú pilasitiki oriṣiriṣi àti àwọn tí a lè tún lò."
+  },
+  "5 Ways to Reduce Household Waste": {
+    English: "5 Ways to Reduce Household Waste",
+    Hausa: "Hanyoyi 5 Don Rage Sharar Gida",
+    Igbo: "Ụzọ 5 Iji Belata Ahịhịa Ụlọ",
+    Yoruba: "Ọ̀nà 5 Láti Dín Ìdọ̀tí Ilé Kù"
+  },
+  "Simple everyday habits that can significantly reduce your environmental footprint.": {
+    English: "Simple everyday habits that can significantly reduce your environmental footprint.",
+    Hausa: "Sauƙaƙan al'adun yau da kullum waɗanda za su iya rage sawun ku na muhalli sosai.",
+    Igbo: "Omume ụbọchị niile dị mfe nke nwere ike ibelata nke ukwuu akara gị na gburugburu ebe obibi.",
+    Yoruba: "Àwọn àṣà ojoojúmọ́ tí ó rọrùn tí ó lè dín ipa rẹ lórí àyíká kù gidigidi."
+  },
+  "Read more →": {
+    English: "Read more →",
+    Hausa: "Karanta ƙari →",
+    Igbo: "Gụọ karịa →",
+    Yoruba: "Ka síwájú →"
+  },
+  "View All Articles": {
+    English: "View All Articles",
+    Hausa: "Duba Duk Labarai",
+    Igbo: "Lelee Akwụkwọ Niile",
+    Yoruba: "Wo Gbogbo Àwọn Àpilẹ̀kọ"
   }
 };
 

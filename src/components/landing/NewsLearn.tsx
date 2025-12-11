@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import TranslatableText from "@/components/TranslatableText";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ArticleCardProps {
   icon: React.ReactNode;
@@ -17,6 +19,7 @@ interface ArticleCardProps {
 
 export const NewsLearn = () => {
   const [selectedArticle, setSelectedArticle] = useState<ArticleCardProps | null>(null);
+  const { translate } = useLanguage();
 
   const articles: ArticleCardProps[] = [
     {
@@ -83,14 +86,13 @@ export const NewsLearn = () => {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium mb-4">
               <Newspaper className="w-4 h-4 text-primary" />
-              Stay Informed
+              <TranslatableText>Stay Informed</TranslatableText>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              News & <span className="text-primary">Learn</span>
+              <TranslatableText>News &</TranslatableText> <span className="text-primary"><TranslatableText>Learn</TranslatableText></span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Stay updated with the latest waste management news, tips, and educational 
-              resources to help you make a bigger impact.
+              <TranslatableText>Stay updated with the latest waste management news, tips, and educational resources to help you make a bigger impact.</TranslatableText>
             </p>
           </div>
 
@@ -98,7 +100,10 @@ export const NewsLearn = () => {
             {articles.map((article, index) => (
               <ArticleCard 
                 key={index} 
-                {...article} 
+                {...article}
+                translatedCategory={translate(article.category)}
+                translatedTitle={translate(article.title)}
+                translatedDescription={translate(article.description)}
                 onClick={() => setSelectedArticle(article)}
               />
             ))}
@@ -107,7 +112,7 @@ export const NewsLearn = () => {
           <div className="text-center">
             <Button variant="outline" size="lg" asChild>
               <Link to="/news-learn">
-                View All Articles
+                <TranslatableText>View All Articles</TranslatableText>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
@@ -126,12 +131,12 @@ export const NewsLearn = () => {
                   selectedArticle.color === "ngo" ? "bg-role-ngo/10 text-role-ngo" :
                   "bg-role-recycler/10 text-role-recycler"
                 }`}>
-                  {selectedArticle.category}
+                  {translate(selectedArticle.category)}
                 </span>
               )}
             </div>
             <DialogTitle className="text-xl font-bold">
-              {selectedArticle?.title}
+              {selectedArticle && translate(selectedArticle.title)}
             </DialogTitle>
           </DialogHeader>
           
@@ -170,9 +175,12 @@ export const NewsLearn = () => {
 
 interface ArticleCardClickProps extends ArticleCardProps {
   onClick: () => void;
+  translatedCategory: string;
+  translatedTitle: string;
+  translatedDescription: string;
 }
 
-const ArticleCard = ({ icon, category, title, description, color, onClick }: ArticleCardClickProps) => {
+const ArticleCard = ({ icon, translatedCategory, translatedTitle, translatedDescription, color, onClick }: ArticleCardClickProps) => {
   const colorClasses = {
     primary: "bg-primary/10 text-primary",
     wmc: "bg-role-wmc/10 text-role-wmc",
@@ -199,15 +207,15 @@ const ArticleCard = ({ icon, category, title, description, color, onClick }: Art
             {icon}
           </div>
           <span className={`text-xs font-medium px-2 py-1 rounded-full ${badgeClasses[color]}`}>
-            {category}
+            {translatedCategory}
           </span>
         </div>
         <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-          {title}
+          {translatedTitle}
         </h3>
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <p className="text-muted-foreground text-sm">{translatedDescription}</p>
         <p className="text-primary text-sm mt-3 font-medium group-hover:underline">
-          Read more →
+          <TranslatableText>Read more →</TranslatableText>
         </p>
       </CardContent>
     </Card>
