@@ -5,6 +5,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Language code mapping for N-ATLaS
+const languageMap: Record<string, string> = {
+  'hausa': 'hau',
+  'igbo': 'ibo', 
+  'yoruba': 'yor',
+  'english': 'eng'
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -29,42 +37,44 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY not configured');
+    const NATLAS_ENDPOINT_URL = Deno.env.get('NATLAS_ENDPOINT_URL');
+    const HF_ACCESS_TOKEN = Deno.env.get('HUGGING_FACE_ACCESS_TOKEN');
+
+    if (!NATLAS_ENDPOINT_URL || !HF_ACCESS_TOKEN) {
+      console.error('N-ATLaS endpoint or HF token not configured');
       return new Response(
         JSON.stringify({ error: 'Translation service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`Translating to ${targetLanguage}: "${text.substring(0, 50)}..."`);
+    const targetLangCode = languageMap[targetLanguage.toLowerCase()] || targetLanguage.toLowerCase();
+    
+    console.log(`Translating to ${targetLanguage} (${targetLangCode}): "${text.substring(0, 50)}..."`);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // N-ATLaS uses Llama-3 chat template format
+    const systemPrompt = `You are N-ATLaS, a Nigerian language translation assistant by Awarri Technologies. Translate the following English text to ${targetLanguage}. Only output the translation, nothing else. Preserve the meaning and tone.`;
+
+    const response = await fetch(NATLAS_ENDPOINT_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Authorization": `Bearer ${HF_ACCESS_TOKEN}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { 
-            role: "system", 
-            content: `You are a translator specializing in Nigerian languages. Translate the given text to ${targetLanguage}. Only respond with the translation, nothing else. Keep the same tone and meaning. If the text contains proper nouns or brand names, keep them as-is.`
-          },
-          { 
-            role: "user", 
-            content: text 
-          }
-        ],
-        temperature: 0.3
+        inputs: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n${systemPrompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${text}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
+        parameters: {
+          max_new_tokens: 512,
+          temperature: 0.3,
+          do_sample: true,
+          return_full_text: false
+        }
       })
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Lovable AI error:', response.status, errorText);
+      console.error('N-ATLaS error:', response.status, errorText);
       
       if (response.status === 429) {
         return new Response(
@@ -73,10 +83,10 @@ serve(async (req) => {
         );
       }
       
-      if (response.status === 402) {
+      if (response.status === 503) {
         return new Response(
-          JSON.stringify({ error: 'AI credits exhausted' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Translation service is starting up, please try again in a moment' }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
@@ -87,9 +97,18 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const translatedText = data.choices?.[0]?.message?.content?.trim() || text;
     
-    console.log(`Translation result: "${translatedText.substring(0, 50)}..."`);
+    // Handle different response formats from HF Inference Endpoints
+    let translatedText = text;
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      translatedText = data[0].generated_text.trim();
+    } else if (data.generated_text) {
+      translatedText = data.generated_text.trim();
+    } else if (typeof data === 'string') {
+      translatedText = data.trim();
+    }
+    
+    console.log(`N-ATLaS translation result: "${translatedText.substring(0, 50)}..."`);
 
     return new Response(
       JSON.stringify({ translatedText }),
