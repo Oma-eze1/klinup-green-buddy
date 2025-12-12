@@ -99,10 +99,12 @@ const NewsLearnPage = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background relative overflow-hidden">
-        {/* Background decorations matching the Hero */}
+        {/* Background decorations matching the Hero - increased opacity and better positioning */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 -right-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-40 -left-32 w-80 h-80 bg-accent/5 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
+          <div className="absolute top-1/3 right-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: "1s" }} />
+          <div className="absolute bottom-1/4 left-0 w-72 h-72 bg-primary/8 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: "2s" }} />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-accent/8 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: "1.5s" }} />
         </div>
 
         {/* Header */}
