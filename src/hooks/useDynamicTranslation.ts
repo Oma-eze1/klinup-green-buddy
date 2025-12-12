@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
 import { getTranslation } from '@/data/translations';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,6 +14,18 @@ interface CacheEntry {
 interface TranslationCache {
   [key: string]: CacheEntry;
 }
+
+// Request queue to prevent rate limiting
+interface QueuedRequest {
+  text: string;
+  language: Language;
+  resolve: (translation: string) => void;
+  reject: (error: Error) => void;
+}
+
+const requestQueue: QueuedRequest[] = [];
+let isProcessingQueue = false;
+const REQUEST_DELAY_MS = 500; // Delay between requests
 
 // Simple hash function for cache keys
 const hashText = (text: string): string => {
@@ -74,11 +86,64 @@ const setCachedTranslation = (key: string, translation: string): void => {
   setCache(cache);
 };
 
+// Process queued requests with delays
+const processQueue = async () => {
+  if (isProcessingQueue || requestQueue.length === 0) return;
+  
+  isProcessingQueue = true;
+  
+  while (requestQueue.length > 0) {
+    const request = requestQueue.shift();
+    if (!request) continue;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('translate', {
+        body: {
+          text: request.text,
+          targetLanguage: request.language.toLowerCase()
+        }
+      });
+
+      if (error) {
+        request.reject(error);
+      } else if (data?.translatedText) {
+        const cacheKey = generateCacheKey(request.text, request.language);
+        setCachedTranslation(cacheKey, data.translatedText);
+        request.resolve(data.translatedText);
+      } else {
+        request.resolve(request.text);
+      }
+    } catch (err) {
+      request.reject(err as Error);
+    }
+    
+    // Wait before next request to avoid rate limiting
+    if (requestQueue.length > 0) {
+      await new Promise(resolve => setTimeout(resolve, REQUEST_DELAY_MS));
+    }
+  }
+  
+  isProcessingQueue = false;
+};
+
+const queueTranslation = (text: string, language: Language): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    requestQueue.push({ text, language, resolve, reject });
+    processQueue();
+  });
+};
+
 export const useDynamicTranslation = (text: string) => {
   const { currentLanguage } = useLanguage();
   const [translatedText, setTranslatedText] = useState<string>(text);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
+  }, []);
 
   const translateText = useCallback(async () => {
     // If no text or empty, return as is
@@ -108,37 +173,25 @@ export const useDynamicTranslation = (text: string) => {
       return;
     }
 
-    // Call N-ATLaS edge function for translation
+    // Queue translation request
     setIsLoading(true);
     setError(null);
 
     try {
-      const { data, error: fnError } = await supabase.functions.invoke('translate', {
-        body: {
-          text,
-          targetLanguage: currentLanguage.toLowerCase()
-        }
-      });
-
-      if (fnError) {
-        throw fnError;
-      }
-
-      if (data?.translatedText) {
-        // Cache the successful translation
-        setCachedTranslation(cacheKey, data.translatedText);
-        setTranslatedText(data.translatedText);
-      } else {
-        // Fallback to original if no translation returned
-        setTranslatedText(text);
+      const result = await queueTranslation(text, currentLanguage);
+      if (isMounted.current) {
+        setTranslatedText(result);
       }
     } catch (err: any) {
       console.error('Translation error:', err);
-      setError(err.message || 'Translation failed');
-      // Fallback to original text on error
-      setTranslatedText(text);
+      if (isMounted.current) {
+        setError(err.message || 'Translation failed');
+        setTranslatedText(text); // Fallback to original
+      }
     } finally {
-      setIsLoading(false);
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
     }
   }, [text, currentLanguage]);
 
