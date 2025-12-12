@@ -282,6 +282,86 @@ export const translations: Record<string, Record<Language, string>> = {
     Hausa: "Duba Duk Labarai",
     Igbo: "Lelee Akwụkwọ Niile",
     Yoruba: "Wo Gbogbo Àwọn Àpilẹ̀kọ"
+  },
+  
+  // News & Learn Page
+  "Back to Home": {
+    English: "Back to Home",
+    Hausa: "Koma Gida",
+    Igbo: "Laghachi N'ụlọ",
+    Yoruba: "Padà sí Ilé"
+  },
+  "News & Learn": {
+    English: "News & Learn",
+    Hausa: "Labarai & Koyo",
+    Igbo: "Akụkọ & Mmụta",
+    Yoruba: "Ìròyìn & Ẹ̀kọ́"
+  },
+  "Stay updated with the latest news, tips, and educational content about waste management and sustainable living.": {
+    English: "Stay updated with the latest news, tips, and educational content about waste management and sustainable living.",
+    Hausa: "Kasance da sabuntawa tare da labarai na baya-bayan nan, shawarwari, da abubuwan ilimi game da sarrafa shara da rayuwa mai dorewa.",
+    Igbo: "Nọrọ na-eweta ozi ọhụrụ, ndụmọdụ, na ihe mmụta banyere njikwa ahịhịa na ndụ na-adịgide adịgide.",
+    Yoruba: "Wà pẹlu awọn ìròyìn tuntun, awọn imọran, ati awọn akoonu ẹkọ nipa iṣakoso idoti ati igbesi aye alagbero."
+  },
+  "Search articles...": {
+    English: "Search articles...",
+    Hausa: "Bincika labarai...",
+    Igbo: "Chọọ akwụkwọ...",
+    Yoruba: "Ṣàwárí àwọn àpilẹ̀kọ..."
+  },
+  "All": {
+    English: "All",
+    Hausa: "Duka",
+    Igbo: "Niile",
+    Yoruba: "Gbogbo"
+  },
+  "Guides": {
+    English: "Guides",
+    Hausa: "Jagorori",
+    Igbo: "Ntuziaka",
+    Yoruba: "Àwọn Ìtọ́sọ́nà"
+  },
+  "Showing": {
+    English: "Showing",
+    Hausa: "Ana nuna",
+    Igbo: "Na-egosi",
+    Yoruba: "Fífi hàn"
+  },
+  "of": {
+    English: "of",
+    Hausa: "daga cikin",
+    Igbo: "n'ime",
+    Yoruba: "ninu"
+  },
+  "articles": {
+    English: "articles",
+    Hausa: "labarai",
+    Igbo: "akwụkwọ",
+    Yoruba: "àwọn àpilẹ̀kọ"
+  },
+  "No articles found": {
+    English: "No articles found",
+    Hausa: "Ba a sami labarai ba",
+    Igbo: "Ahụghị akwụkwọ ọ bụla",
+    Yoruba: "Ko ri àpilẹ̀kọ kankan"
+  },
+  "Try adjusting your search or filter criteria.": {
+    English: "Try adjusting your search or filter criteria.",
+    Hausa: "Gwada daidaita binciken ku ko ƙa'idodin tace.",
+    Igbo: "Gbalịa ịgbanwe nchọpụta gị ma ọ bụ usoro nzacha.",
+    Yoruba: "Gbìyànjú láti ṣàtúnṣe ìwádìí rẹ tàbí àwọn ìlànà ìṣàyẹ̀wò."
+  },
+  "Clear filters": {
+    English: "Clear filters",
+    Hausa: "Share tacewa",
+    Igbo: "Kpochapụ nzacha",
+    Yoruba: "Fọ àwọn ìṣàyẹ̀wò"
+  },
+  "Related Materials": {
+    English: "Related Materials",
+    Hausa: "Kayan da ke da Alaƙa",
+    Igbo: "Ihe Ndị Metụtara",
+    Yoruba: "Àwọn Ohun Èlò Tó Jọmọ́"
   }
 };
 
