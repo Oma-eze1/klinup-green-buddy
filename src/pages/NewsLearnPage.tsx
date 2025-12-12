@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/pagination";
 import { articles, getArticleIcon, Article } from "@/data/articles";
 import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
+import { useLanguage } from "@/contexts/LanguageContext";
+import TranslatableText from "@/components/TranslatableText";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -29,6 +32,7 @@ const categoryFilters = [
 ];
 
 const NewsLearnPage = () => {
+  const { translate } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -94,29 +98,38 @@ const NewsLearnPage = () => {
         />
       </Helmet>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background relative overflow-hidden">
+        {/* Background decorations matching the Hero */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 -right-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-40 -left-32 w-80 h-80 bg-accent/5 rounded-full blur-3xl" />
+        </div>
+
         {/* Header */}
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
               <ArrowLeft className="w-5 h-5" />
-              <span className="hidden sm:inline">Back to Home</span>
+              <span className="hidden sm:inline">
+                <TranslatableText>Back to Home</TranslatableText>
+              </span>
             </Link>
             <Link to="/">
               <KlinUpLogo className="h-8" />
             </Link>
-            <div className="w-20" /> {/* Spacer for centering */}
+            <LanguageSwitcher />
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-12">
+        <main className="container mx-auto px-4 py-12 relative z-10">
           {/* Page Title */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              News & <span className="eco-text-gradient">Learn</span>
+              <TranslatableText>News &</TranslatableText>{" "}
+              <span className="eco-text-gradient"><TranslatableText>Learn</TranslatableText></span>
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Stay updated with the latest news, tips, and educational content about waste management and sustainable living.
+              <TranslatableText>Stay updated with the latest news, tips, and educational content about waste management and sustainable living.</TranslatableText>
             </p>
           </div>
 
@@ -126,10 +139,10 @@ const NewsLearnPage = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search articles..."
+                placeholder={translate("Search articles...")}
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10 pr-10"
+                className="pl-10 pr-10 focus-visible:ring-primary"
               />
               {searchQuery && (
                 <button
@@ -148,9 +161,9 @@ const NewsLearnPage = () => {
                   variant={selectedCategory === filter.value ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleCategoryChange(filter.value)}
-                  className={selectedCategory === filter.value ? "" : filter.color}
+                  className={selectedCategory === filter.value ? "bg-primary hover:bg-primary/90" : filter.color}
                 >
-                  {filter.label}
+                  <TranslatableText>{filter.label}</TranslatableText>
                 </Button>
               ))}
             </div>
@@ -158,7 +171,7 @@ const NewsLearnPage = () => {
 
           {/* Results Count */}
           <p className="text-center text-muted-foreground mb-6">
-            Showing {paginatedArticles.length} of {filteredArticles.length} articles
+            <TranslatableText>Showing</TranslatableText> {paginatedArticles.length} <TranslatableText>of</TranslatableText> {filteredArticles.length} <TranslatableText>articles</TranslatableText>
           </p>
 
           {/* Articles Grid */}
@@ -170,20 +183,24 @@ const NewsLearnPage = () => {
                   <Card
                     key={article.id}
                     variant="interactive"
-                    className="group cursor-pointer"
+                    className="group cursor-pointer card-shadow hover:card-shadow-hover transition-shadow"
                     onClick={() => handleArticleClick(article)}
                   >
                     <CardContent className="p-6">
                       <div className={`w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                         <span className={colors.text}>{getArticleIcon(article.categoryType)}</span>
                       </div>
-                      <Badge className={`${colors.badge} mb-3`}>{article.category}</Badge>
+                      <Badge className={`${colors.badge} mb-3`}>
+                        <TranslatableText>{article.category}</TranslatableText>
+                      </Badge>
                       <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                        {article.title}
+                        <TranslatableText>{article.title}</TranslatableText>
                       </h3>
-                      <p className="text-muted-foreground text-sm line-clamp-2">{article.description}</p>
+                      <p className="text-muted-foreground text-sm line-clamp-2">
+                        <TranslatableText>{article.description}</TranslatableText>
+                      </p>
                       <p className="text-primary text-sm font-medium mt-4 flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Read more →
+                        <TranslatableText>Read more →</TranslatableText>
                       </p>
                     </CardContent>
                   </Card>
@@ -192,13 +209,17 @@ const NewsLearnPage = () => {
             </div>
           ) : (
             <div className="text-center py-16">
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-muted-foreground" />
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">No articles found</h3>
-              <p className="text-muted-foreground mb-4">Try adjusting your search or filter criteria.</p>
-              <Button variant="outline" onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }}>
-                Clear filters
+              <h3 className="text-xl font-semibold mb-2">
+                <TranslatableText>No articles found</TranslatableText>
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                <TranslatableText>Try adjusting your search or filter criteria.</TranslatableText>
+              </p>
+              <Button variant="outline" onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }} className="border-primary text-primary hover:bg-primary/10">
+                <TranslatableText>Clear filters</TranslatableText>
               </Button>
             </div>
           )}
@@ -210,7 +231,7 @@ const NewsLearnPage = () => {
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer hover:text-primary"}
                   />
                 </PaginationItem>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -218,7 +239,7 @@ const NewsLearnPage = () => {
                     <PaginationLink
                       onClick={() => setCurrentPage(page)}
                       isActive={currentPage === page}
-                      className="cursor-pointer"
+                      className={`cursor-pointer ${currentPage === page ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
                     >
                       {page}
                     </PaginationLink>
@@ -227,7 +248,7 @@ const NewsLearnPage = () => {
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer hover:text-primary"}
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -249,16 +270,18 @@ const NewsLearnPage = () => {
                 </div>
               )}
               <Badge className={selectedArticle ? getColorClasses(selectedArticle.color).badge : ""}>
-                {selectedArticle?.category}
+                {selectedArticle && <TranslatableText>{selectedArticle.category}</TranslatableText>}
               </Badge>
             </div>
-            <DialogTitle className="text-xl">{selectedArticle?.title}</DialogTitle>
+            <DialogTitle className="text-xl">
+              {selectedArticle && <TranslatableText>{selectedArticle.title}</TranslatableText>}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
             {selectedArticle?.fullContent.map((paragraph, index) => (
               <p key={index} className="text-muted-foreground leading-relaxed">
-                {paragraph}
+                <TranslatableText>{paragraph}</TranslatableText>
               </p>
             ))}
           </div>
@@ -267,16 +290,20 @@ const NewsLearnPage = () => {
             <div className="mt-8">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-primary" />
-                Related Materials
+                <TranslatableText>Related Materials</TranslatableText>
               </h3>
               <div className="space-y-4">
                 {selectedArticle.relatedMaterials.map((material, index) => (
                   <div
                     key={index}
-                    className="p-4 rounded-lg bg-secondary/50 border border-border hover:bg-secondary transition-colors"
+                    className="p-4 rounded-lg bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
                   >
-                    <h4 className="font-medium text-sm mb-2">{material.title}</h4>
-                    <p className="text-muted-foreground text-sm">{material.content}</p>
+                    <h4 className="font-medium text-sm mb-2">
+                      <TranslatableText>{material.title}</TranslatableText>
+                    </h4>
+                    <p className="text-muted-foreground text-sm">
+                      <TranslatableText>{material.content}</TranslatableText>
+                    </p>
                   </div>
                 ))}
               </div>
