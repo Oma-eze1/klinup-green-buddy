@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import TranslatableText from "@/components/TranslatableText";
+import DynamicTranslatableText from "@/components/DynamicTranslatableText";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ArticleCardProps {
@@ -143,7 +144,7 @@ export const NewsLearn = () => {
           <div className="space-y-4 mt-4">
             {selectedArticle?.fullContent.map((paragraph, index) => (
               <p key={index} className="text-muted-foreground leading-relaxed">
-                {paragraph}
+                <DynamicTranslatableText showLoadingIndicator>{paragraph}</DynamicTranslatableText>
               </p>
             ))}
           </div>
@@ -152,7 +153,7 @@ export const NewsLearn = () => {
             <div className="mt-8">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-primary" />
-                Related Materials
+                <TranslatableText>Related Materials</TranslatableText>
               </h3>
               <div className="space-y-4">
                 {selectedArticle.relatedMaterials.map((material, index) => (
@@ -160,8 +161,12 @@ export const NewsLearn = () => {
                     key={index} 
                     className="p-4 rounded-lg bg-secondary/50 border border-border hover:bg-secondary transition-colors"
                   >
-                    <h4 className="font-medium text-sm mb-2">{material.title}</h4>
-                    <p className="text-muted-foreground text-sm">{material.content}</p>
+                    <h4 className="font-medium text-sm mb-2">
+                      <DynamicTranslatableText>{material.title}</DynamicTranslatableText>
+                    </h4>
+                    <p className="text-muted-foreground text-sm">
+                      <DynamicTranslatableText showLoadingIndicator>{material.content}</DynamicTranslatableText>
+                    </p>
                   </div>
                 ))}
               </div>
