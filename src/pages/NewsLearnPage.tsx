@@ -19,6 +19,7 @@ import { articles, getArticleIcon, Article } from "@/data/articles";
 import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
 import { useLanguage } from "@/contexts/LanguageContext";
 import TranslatableText from "@/components/TranslatableText";
+import DynamicTranslatableText from "@/components/DynamicTranslatableText";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const ARTICLES_PER_PAGE = 6;
@@ -196,10 +197,10 @@ const NewsLearnPage = () => {
                         <TranslatableText>{article.category}</TranslatableText>
                       </Badge>
                       <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                        <TranslatableText>{article.title}</TranslatableText>
+                        <DynamicTranslatableText>{article.title}</DynamicTranslatableText>
                       </h3>
                       <p className="text-muted-foreground text-sm line-clamp-2">
-                        <TranslatableText>{article.description}</TranslatableText>
+                        <DynamicTranslatableText>{article.description}</DynamicTranslatableText>
                       </p>
                       <p className="text-primary text-sm font-medium mt-4 flex items-center gap-1 group-hover:gap-2 transition-all">
                         <TranslatableText>Read more →</TranslatableText>
@@ -276,14 +277,14 @@ const NewsLearnPage = () => {
               </Badge>
             </div>
             <DialogTitle className="text-xl">
-              {selectedArticle && <TranslatableText>{selectedArticle.title}</TranslatableText>}
+              {selectedArticle && <DynamicTranslatableText>{selectedArticle.title}</DynamicTranslatableText>}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
             {selectedArticle?.fullContent.map((paragraph, index) => (
               <p key={index} className="text-muted-foreground leading-relaxed">
-                <TranslatableText>{paragraph}</TranslatableText>
+                <DynamicTranslatableText showLoadingIndicator>{paragraph}</DynamicTranslatableText>
               </p>
             ))}
           </div>
@@ -301,10 +302,10 @@ const NewsLearnPage = () => {
                     className="p-4 rounded-lg bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
                   >
                     <h4 className="font-medium text-sm mb-2">
-                      <TranslatableText>{material.title}</TranslatableText>
+                      <DynamicTranslatableText>{material.title}</DynamicTranslatableText>
                     </h4>
                     <p className="text-muted-foreground text-sm">
-                      <TranslatableText>{material.content}</TranslatableText>
+                      <DynamicTranslatableText showLoadingIndicator>{material.content}</DynamicTranslatableText>
                     </p>
                   </div>
                 ))}
