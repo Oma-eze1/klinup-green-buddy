@@ -13,7 +13,6 @@ serve(async (req) => {
 
   try {
     const { text, targetLanguage } = await req.json();
-    
     if (!text || !targetLanguage) {
       return new Response(
         JSON.stringify({ error: 'Missing text or targetLanguage' }),
@@ -29,60 +28,36 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-
-    if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY not configured');
-      return new Response(
-        JSON.stringify({ error: 'Translation service not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Use Modal N-ATLaS endpoint (OpenAI-compatible)
+    const MODAL_NATLAS_URL = Deno.env.get('MODAL_NATLAS_URL') || 'https://jahswill4jahs--natlas-vllm-serve.modal.run/v1/chat/completions';
     console.log(`Translating to ${targetLanguage}: "${text.substring(0, 50)}..."`);
-
-    const systemPrompt = `You are a Nigerian language translation expert. Translate the following English text to ${targetLanguage}. 
-Rules:
-- Only output the translation, nothing else
-- Preserve the meaning and tone
-- Use authentic ${targetLanguage} expressions where appropriate
-- Do not add explanations or notes`;
-
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch(MODAL_NATLAS_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'n-atlas',
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: text }
+          {
+            role: 'user',
+            content: `Translate the following English text to ${targetLanguage} (only output the translation):\n${text}`
+          }
         ],
-        temperature: 0.3,
-        max_tokens: 1024,
+        temperature: 0.2,
+        max_tokens: 256,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Lovable AI error:', response.status, errorText);
-      
+      console.error('Modal N-ATLaS API error:', response.status, errorText);
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: 'Rate limit exceeded, please try again later' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: 'Payment required, please add credits' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
       return new Response(
         JSON.stringify({ error: 'Translation failed', details: errorText }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -90,8 +65,10 @@ Rules:
     }
 
     const data = await response.json();
-    const translatedText = data.choices?.[0]?.message?.content?.trim() || text;
-    
+    let translatedText = text;
+    if (data?.choices?.[0]?.message?.content) {
+      translatedText = String(data.choices[0].message.content).trim();
+    }
     console.log(`Translation result: "${translatedText.substring(0, 50)}..."`);
 
     return new Response(
