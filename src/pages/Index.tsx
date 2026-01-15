@@ -8,10 +8,10 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>KlinUp - Report Waste, Earn Rewards, Save the Planet</title>
+        <title>SmartKlin - Report Waste, Earn Rewards, Save the Planet</title>
         <meta
           name="description"
-          content="KlinUp empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items. Join the movement for a cleaner environment."
+          content="SmartKlin empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items. Join the movement for a cleaner environment."
         />
       </Helmet>
       <main className="min-h-screen bg-background">
