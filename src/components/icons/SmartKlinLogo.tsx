@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
-interface KlinUpLogoProps {
+interface SmartKlinLogoProps {
   className?: string;
   size?: "sm" | "md" | "lg";
 }
 
-export const KlinUpLogo = ({ className, size = "md" }: KlinUpLogoProps) => {
+export const SmartKlinLogo = ({ className, size = "md" }: SmartKlinLogoProps) => {
   const sizes = {
     sm: "h-8",
     md: "h-10",
@@ -51,7 +51,7 @@ export const KlinUpLogo = ({ className, size = "md" }: KlinUpLogoProps) => {
           size === "lg" && "text-3xl"
         )}
       >
-        Klin<span className="text-primary">Up</span>
+        Smart<span className="text-primary">Klin</span>
       </span>
     </div>
   );

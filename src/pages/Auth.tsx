@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
+import { SmartKlinLogo } from "@/components/icons/SmartKlinLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -189,7 +189,7 @@ const Auth = () => {
       {/* Header */}
       <header className="container py-6">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -202,15 +202,15 @@ const Auth = () => {
         <Card className="w-full max-w-lg animate-slide-up">
           <CardHeader className="text-center pb-2">
             <div className="flex justify-center mb-4">
-              <KlinUpLogo />
+              <SmartKlinLogo />
             </div>
             <CardTitle className="text-2xl">
               {isSignup ? "Create your account" : "Welcome back"}
             </CardTitle>
             <CardDescription>
               {isSignup
-                ? "Join KlinUp and start making a difference"
-                : "Sign in to continue to KlinUp"}
+                ? "Join SmartKlin and start making a difference"
+                : "Sign in to continue to SmartKlin"}
             </CardDescription>
           </CardHeader>
 
@@ -219,7 +219,7 @@ const Auth = () => {
               // Role selection step
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground text-center mb-6">
-                  Choose how you want to use KlinUp
+                  Choose how you want to use SmartKlin
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   {roles.map((role) => (

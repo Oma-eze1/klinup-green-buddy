@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
+import { SmartKlinLogo } from "@/components/icons/SmartKlinLogo";
 import { ArrowRight, Recycle, Camera, Gift, Coins } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -18,7 +18,7 @@ export const Hero = () => {
 
       {/* Header */}
       <header className="container py-6 flex items-center justify-between">
-        <KlinUpLogo />
+        <SmartKlinLogo />
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
           <Button variant="ghost" onClick={() => navigate("/auth")}>
@@ -48,14 +48,14 @@ export const Hero = () => {
             
             <p className="text-lg text-muted-foreground mb-8 max-w-lg">
               <TranslatableText>
-                KlinUp empowers citizens to report waste incidents, sell recyclables for cash, 
+                SmartKlin empowers citizens to report waste incidents, sell recyclables for cash, 
                 and donate reusable items to those in need. Join the movement for a cleaner environment.
               </TranslatableText>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="xl" variant="hero" onClick={() => navigate("/auth?mode=signup")}>
-                <TranslatableText>Join KlinUp Free</TranslatableText>
+                <TranslatableText>Join SmartKlin Free</TranslatableText>
                 <ArrowRight className="w-5 h-5" />
               </Button>
               <Button size="xl" variant="outline" onClick={() => navigate("/auth")}>

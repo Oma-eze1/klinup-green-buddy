@@ -65,17 +65,17 @@ export const translations: Record<string, Record<Language, string>> = {
     Igbo: "Zọpụta Ụwa.",
     Yoruba: "Gba Ayé Là."
   },
-  "KlinUp empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items to those in need. Join the movement for a cleaner environment.": {
-    English: "KlinUp empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items to those in need. Join the movement for a cleaner environment.",
-    Hausa: "KlinUp na bai wa 'yan ƙasa damar bayar da rahoton lamarin shara, siyar da abubuwan sake yin amfani da su don kuɗi, da ba da gudummawar abubuwan da za a iya sake amfani da su ga masu buƙata. Ku shiga ƙungiyar don samun muhalli mai tsabta.",
-    Igbo: "KlinUp na-enye ndị mmadụ ike ịkọ ihe banyere ahịhịa, ree ihe ndị a na-eji arụgharị maka ego, na inye ihe ndị a nwere ike iji ọzọ nye ndị nọ na mkpa. Sonyere mmegharị maka gburugburu ebe obibi dị ọcha.",
-    Yoruba: "KlinUp n fun awọn ara ilu ni agbara lati ròyìn awọn iṣẹlẹ idoti, ta awọn nkan atunlo fun owo, ati fifunni awọn nkan ti o le tun lo fun awọn ti o nilo. Darapọ mọ ẹgbẹ fun ayika ti o mọ."
+  "SmartKlin empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items to those in need. Join the movement for a cleaner environment.": {
+    English: "SmartKlin empowers citizens to report waste incidents, sell recyclables for cash, and donate reusable items to those in need. Join the movement for a cleaner environment.",
+    Hausa: "SmartKlin na bai wa 'yan ƙasa damar bayar da rahoton lamarin shara, siyar da abubuwan sake yin amfani da su don kuɗi, da ba da gudummawar abubuwan da za a iya sake amfani da su ga masu buƙata. Ku shiga ƙungiyar don samun muhalli mai tsabta.",
+    Igbo: "SmartKlin na-enye ndị mmadụ ike ịkọ ihe banyere ahịhịa, ree ihe ndị a na-eji arụgharị maka ego, na inye ihe ndị a nwere ike iji ọzọ nye ndị nọ na mkpa. Sonyere mmegharị maka gburugburu ebe obibi dị ọcha.",
+    Yoruba: "SmartKlin n fun awọn ara ilu ni agbara lati ròyìn awọn iṣẹlẹ idoti, ta awọn nkan atunlo fun owo, ati fifunni awọn nkan ti o le tun lo fun awọn ti o nilo. Darapọ mọ ẹgbẹ fun ayika ti o mọ."
   },
-  "Join KlinUp Free": {
-    English: "Join KlinUp Free",
-    Hausa: "Shiga KlinUp Kyauta",
-    Igbo: "Sonye na KlinUp n'efu",
-    Yoruba: "Darapọ mọ KlinUp lọfẹ"
+  "Join SmartKlin Free": {
+    English: "Join SmartKlin Free",
+    Hausa: "Shiga SmartKlin Kyauta",
+    Igbo: "Sonye na SmartKlin n'efu",
+    Yoruba: "Darapọ mọ SmartKlin lọfẹ"
   },
 
   // How It Works Section
@@ -91,11 +91,11 @@ export const translations: Record<string, Record<Language, string>> = {
     Igbo: "Na-ewu obodo dị ọcha ọnụ.",
     Yoruba: "Kíkọ́ àwọn ìlú mímọ́ papọ̀."
   },
-  "KlinUp connects citizens, waste management companies, NGOs, and recyclers to create a sustainable ecosystem for waste management.": {
-    English: "KlinUp connects citizens, waste management companies, NGOs, and recyclers to create a sustainable ecosystem for waste management.",
-    Hausa: "KlinUp na haɗa 'yan ƙasa, kamfanonin sarrafa shara, kungiyoyi masu zaman kansu, da masu sake yin amfani da abubuwa don ƙirƙirar tsarin muhalli mai dorewa don sarrafa shara.",
-    Igbo: "KlinUp na-ejikọta ndị mmadụ, ụlọ ọrụ na-ahụ maka ahịhịa, NGO, na ndị na-emegharị ihe iji mepụta usoro gburugburu ebe obibi na-adịgide adịgide maka njikwa ahịhịa.",
-    Yoruba: "KlinUp n so awọn ara ilu, awọn ile-iṣẹ iṣakoso idoti, awọn NGO, ati awọn atunlo pọ lati ṣẹda eto ayika ti o le duro fun iṣakoso idoti."
+  "SmartKlin connects citizens, waste management companies, NGOs, and recyclers to create a sustainable ecosystem for waste management.": {
+    English: "SmartKlin connects citizens, waste management companies, NGOs, and recyclers to create a sustainable ecosystem for waste management.",
+    Hausa: "SmartKlin na haɗa 'yan ƙasa, kamfanonin sarrafa shara, kungiyoyi masu zaman kansu, da masu sake yin amfani da abubuwa don ƙirƙirar tsarin muhalli mai dorewa don sarrafa shara.",
+    Igbo: "SmartKlin na-ejikọta ndị mmadụ, ụlọ ọrụ na-ahụ maka ahịhịa, NGO, na ndị na-emegharị ihe iji mepụta usoro gburugburu ebe obibi na-adịgide adịgide maka njikwa ahịhịa.",
+    Yoruba: "SmartKlin n so awọn ara ilu, awọn ile-iṣẹ iṣakoso idoti, awọn NGO, ati awọn atunlo pọ lati ṣẹda eto ayika ti o le duro fun iṣakoso idoti."
   },
   "Citizens": {
     English: "Citizens",

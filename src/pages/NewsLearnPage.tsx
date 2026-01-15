@@ -16,7 +16,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { articles, getArticleIcon, Article } from "@/data/articles";
-import { KlinUpLogo } from "@/components/icons/KlinUpLogo";
+import { SmartKlinLogo } from "@/components/icons/SmartKlinLogo";
 import { useLanguage } from "@/contexts/LanguageContext";
 import TranslatableText from "@/components/TranslatableText";
 import DynamicTranslatableText from "@/components/DynamicTranslatableText";
@@ -92,7 +92,7 @@ const NewsLearnPage = () => {
   return (
     <>
       <Helmet>
-        <title>News & Learn - KlinUp | Waste Management Insights</title>
+        <title>News & Learn - SmartKlin | Waste Management Insights</title>
         <meta
           name="description"
           content="Stay updated with the latest news, tips, and educational content about waste management and recycling."
@@ -111,14 +111,14 @@ const NewsLearnPage = () => {
         {/* Header */}
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+            <Link to="/home" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
               <ArrowLeft className="w-5 h-5" />
               <span className="hidden sm:inline">
                 <TranslatableText>Back to Home</TranslatableText>
               </span>
             </Link>
-            <Link to="/">
-              <KlinUpLogo className="h-8" />
+            <Link to="/home">
+              <SmartKlinLogo className="h-8" />
             </Link>
             <LanguageSwitcher />
           </div>
