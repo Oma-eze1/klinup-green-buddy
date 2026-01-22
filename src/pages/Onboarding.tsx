@@ -13,7 +13,7 @@ const slides = [
   },
   {
     icon: Coins,
-    title: "Earn Rewards",
+    title: "Cash out",
     description: "Sell your recyclables and earn cash instantly",
     color: "recycler",
   },
